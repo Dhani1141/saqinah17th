@@ -182,7 +182,7 @@ function App() {
                 <MapPin className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <p className="font-serif font-semibold text-lg text-gray-800">Secret Venue</p>
+                <p className="font-serif font-semibold text-lg text-gray-800">Event Location</p>
                 <p className="text-sm font-medium text-gray-500">Location Revealed to VIPs</p>
               </div>
             </div>
