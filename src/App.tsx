@@ -1,9 +1,38 @@
 import { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, Navigation, Ticket, CheckCircle2 } from 'lucide-react';
+import { Calendar, Clock, MapPin, Navigation, CalendarPlus } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Custom glowing marker for Leaflet
+const customMarker = L.divIcon({
+  className: 'bg-transparent',
+  html: `<div class="w-5 h-5 bg-fuchsia-500 rounded-full shadow-[0_0_20px_rgba(217,70,239,1)] border-2 border-white animate-pulse-slow"></div>`,
+  iconSize: [20, 20],
+  iconAnchor: [10, 10]
+});
+
+// Component to handle the map animation
+function MapAnimator() {
+  const map = useMap();
+  useEffect(() => {
+    // Initial zoom out on Borneo
+    map.setView([0.0, 114.0], 5);
+    
+    // Fly to venue after 1.5 seconds
+    const timeout = setTimeout(() => {
+      map.flyTo([-0.484000, 117.180722], 17, {
+        duration: 3.5,
+        easeLinearity: 0.25
+      });
+    }, 1500);
+
+    return () => clearTimeout(timeout);
+  }, [map]);
+  return null;
+}
 
 function App() {
-  const [rsvpConfirmed, setRsvpConfirmed] = useState(false);
-  
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -32,18 +61,26 @@ function App() {
     return () => clearInterval(timer);
   }, []);
 
-  const handleRSVP = () => {
+  const handleSaveToCalendar = () => {
     if (navigator.vibrate) {
       navigator.vibrate([100, 50, 100]);
     }
-    setRsvpConfirmed(true);
+    
+    // Google Calendar URL format
+    const text = encodeURIComponent("Saqinah's Sweet 17");
+    const dates = "20260920T083000Z/20260920T130000Z"; // 16:30 WITA to 21:00 WITA in UTC
+    const details = encodeURIComponent("Don't be late! VIP Access Only.");
+    const location = encodeURIComponent("https://goo.gl/maps/FB5vcHYFkyEnHPQF8");
+    
+    const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${dates}&details=${details}&location=${location}`;
+    window.open(calUrl, '_blank');
   };
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4 sm:p-8 hide-scrollbar bg-[#09090b] overflow-hidden">
       
       {/* Noise Texture */}
-      <div className="fixed inset-0 noise-bg z-50 mix-blend-overlay"></div>
+      <div className="fixed inset-0 noise-bg z-50 mix-blend-overlay pointer-events-none"></div>
 
       {/* Animated Gradient Meshes */}
       <div className="fixed top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-fuchsia-600/30 blur-[120px] rounded-full mix-blend-screen animate-float-1 pointer-events-none" />
@@ -95,6 +132,18 @@ function App() {
           </div>
         </section>
 
+        {/* Save to Calendar Button */}
+        <div className="pt-2 pb-2">
+          <button 
+            onClick={handleSaveToCalendar}
+            className="relative w-full py-5 rounded-[2rem] font-syne font-bold tracking-widest uppercase transition-all duration-500 flex items-center justify-center gap-3 overflow-hidden bg-white/10 text-white border border-fuchsia-500/50 hover:bg-fuchsia-500/20 shadow-[0_0_20px_rgba(217,70,239,0.2)] hover:shadow-[0_0_40px_rgba(217,70,239,0.5)] active:scale-[0.97]"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600/0 via-fuchsia-500/30 to-fuchsia-600/0 translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-1000"></div>
+            <CalendarPlus className="w-6 h-6 text-fuchsia-300 relative z-10" />
+            <span className="relative z-10">SAVE TO CALENDAR</span>
+          </button>
+        </div>
+
         {/* Event Details (Overlapping Glass Panels) */}
         <section className="relative">
           {/* Decorative element behind */}
@@ -132,52 +181,44 @@ function App() {
               </div>
               <div className="flex-1">
                 <p className="font-syne font-bold text-lg text-white">Secret Venue</p>
-                <p className="text-sm font-medium text-white/50 mb-4">Location Revealed to VIPs</p>
-                
-                <a 
-                  href="https://maps.app.goo.gl/E2p3D1QiZB93nqkJ6" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/20 backdrop-blur-md transition-all duration-300 py-2.5 px-5 rounded-full text-sm font-bold tracking-wide text-white group-hover:border-purple-400/50 shadow-lg"
-                >
-                  <Navigation className="w-4 h-4 text-purple-400 group-hover:-rotate-45 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform duration-300" />
-                  OPEN IN MAPS
-                </a>
+                <p className="text-sm font-medium text-white/50">Location Revealed to VIPs</p>
               </div>
             </div>
+
+            {/* Interactive Map */}
+            <div className="w-full h-48 mt-2 rounded-2xl overflow-hidden border border-purple-500/30 relative shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+              {/* Force rendering after mount to avoid weird Leaflet bugs with sizing */}
+              <MapContainer 
+                center={[0.0, 114.0]} 
+                zoom={5} 
+                zoomControl={false} 
+                scrollWheelZoom={false}
+                attributionControl={false}
+                style={{ height: '100%', width: '100%', zIndex: 10 }}
+              >
+                <TileLayer
+                  url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                />
+                <Marker position={[-0.484000, 117.180722]} icon={customMarker} />
+                <MapAnimator />
+              </MapContainer>
+              {/* Inner shadow overlay for cyberpunk look */}
+              <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] z-20"></div>
+            </div>
+
+            <a 
+              href="https://goo.gl/maps/FB5vcHYFkyEnHPQF8" 
+              target="_blank" 
+              rel="noreferrer"
+              className="mt-2 inline-flex w-full items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/20 backdrop-blur-md transition-all duration-300 py-3 px-5 rounded-2xl text-sm font-bold tracking-wide text-white group hover:border-purple-400/50 shadow-lg"
+            >
+              <Navigation className="w-4 h-4 text-purple-400 group-hover:-rotate-45 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform duration-300" />
+              OPEN IN GOOGLE MAPS
+            </a>
+
           </div>
         </section>
 
-        {/* RSVP Button */}
-        <div className="pt-6 pb-10">
-          <button 
-            onClick={handleRSVP}
-            disabled={rsvpConfirmed}
-            className={`relative w-full py-5 rounded-[2rem] font-syne font-bold tracking-widest uppercase transition-all duration-500 flex items-center justify-center gap-3 overflow-hidden ${
-              rsvpConfirmed 
-                ? 'bg-[#052e16]/80 text-[#4ade80] border border-[#22c55e]/50 shadow-[0_0_30px_rgba(34,197,94,0.3)]' 
-                : 'bg-white/10 text-white border border-fuchsia-500/50 hover:bg-fuchsia-500/20 shadow-[0_0_20px_rgba(217,70,239,0.2)] hover:shadow-[0_0_40px_rgba(217,70,239,0.5)] active:scale-[0.97]'
-            }`}
-          >
-            {/* Glowing effect inside button */}
-            {!rsvpConfirmed && (
-              <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600/0 via-fuchsia-500/30 to-fuchsia-600/0 translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-1000"></div>
-            )}
-
-            {rsvpConfirmed ? (
-              <>
-                <CheckCircle2 className="w-6 h-6 text-green-400 drop-shadow-[0_0_10px_rgba(74,222,128,1)] scale-125 transition-transform" />
-                <span className="drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]">SEAT CONFIRMED</span>
-              </>
-            ) : (
-              <>
-                <Ticket className="w-6 h-6 text-fuchsia-300" />
-                <span>CONFIRM ATTENDANCE</span>
-              </>
-            )}
-          </button>
-        </div>
-        
       </div>
     </div>
   );
