@@ -16,14 +16,13 @@ const customMarker = L.divIcon({
 function MapAnimator() {
   const map = useMap();
   useEffect(() => {
-    // Initial zoom out on Borneo
-    map.setView([0.0, 114.0], 5);
+    // Initial zoom out on Indonesia
+    map.setView([-2.5, 118.0], 4);
     
     // Fly to venue after 1.5 seconds
     const timeout = setTimeout(() => {
       map.flyTo([-0.484000, 117.180722], 17, {
-        duration: 3.5,
-        easeLinearity: 0.25
+        duration: 3
       });
     }, 1500);
 
@@ -66,27 +65,8 @@ function App() {
       navigator.vibrate([100, 50, 100]);
     }
     
-    const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-BEGIN:VEVENT
-DTSTART:20260920T083000Z
-DTEND:20260920T130000Z
-SUMMARY:Saqinah's Sweet 17
-DESCRIPTION:Don't be late! VIP Access Only.
-LOCATION:https://goo.gl/maps/FB5vcHYFkyEnHPQF8
-END:VEVENT
-END:VCALENDAR`;
-
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'saqinah-sweet-17.ics');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Saqinah's+Sweet+17&dates=20260920T083000Z/20260920T130000Z&details=Don't+be+late!+VIP+Access+Only.&location=https://goo.gl/maps/FB5vcHYFkyEnHPQF8`;
+    window.open(calUrl, '_blank');
   };
 
   return (
@@ -202,8 +182,8 @@ END:VCALENDAR`;
             <div className="w-full h-48 mt-2 rounded-2xl overflow-hidden border border-purple-500/30 relative shadow-[0_0_15px_rgba(168,85,247,0.2)]">
               {/* Force rendering after mount to avoid weird Leaflet bugs with sizing */}
               <MapContainer 
-                center={[0.0, 114.0]} 
-                zoom={5} 
+                center={[-2.5, 118.0]} 
+                zoom={4} 
                 zoomControl={false} 
                 scrollWheelZoom={false}
                 attributionControl={false}
