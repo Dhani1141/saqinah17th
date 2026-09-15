@@ -94,7 +94,7 @@ function App() {
           <h1 className="text-8xl font-serif text-rose-400 italic z-10 drop-shadow-sm">S</h1>
         </div>
         <p className="mt-6 font-serif text-rose-300 text-lg italic tracking-wide animate-fade-in-up" style={{ animationDelay: '0.5s', opacity: 0 }}>
-          You're Invited...
+          Kamu Diundang...
         </p>
       </div>
     );
@@ -114,7 +114,7 @@ function App() {
         {/* Hero Section */}
         <header className="flex flex-col items-center justify-center text-center mt-4">
           <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-pink-50 border border-pink-200 shadow-sm mb-6">
-            <span className="text-[10px] font-bold tracking-[0.2em] text-pink-400 uppercase">You are cordially invited</span>
+            <span className="text-[10px] font-bold tracking-[0.2em] text-pink-400 uppercase">UNDANGAN SPESIAL</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-semibold tracking-tight uppercase leading-[1.15] text-rose-600 px-2 text-soft-glow">
@@ -125,16 +125,19 @@ function App() {
         {/* Live Countdown */}
         <section className="flex flex-col items-center gap-4 my-2">
           <div className="flex gap-4 sm:gap-6 w-full justify-center items-end">
-            {Object.entries(timeLeft).map(([label, value]) => (
-              <div key={label} className="flex flex-col items-center gap-1 group">
-                <span className="text-4xl sm:text-5xl font-serif font-medium text-rose-500 group-hover:scale-105 transition-transform duration-300 drop-shadow-sm">
-                  {value.toString().padStart(2, '0')}
-                </span>
-                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.15em] text-gray-400 uppercase">
-                  {label}
-                </span>
-              </div>
-            ))}
+            {Object.entries(timeLeft).map(([label, value]) => {
+              const translatedLabel = label === 'days' ? 'Hari' : label === 'hours' ? 'Jam' : label === 'minutes' ? 'Menit' : 'Detik';
+              return (
+                <div key={label} className="flex flex-col items-center gap-1 group">
+                  <span className="text-4xl sm:text-5xl font-serif font-medium text-rose-500 group-hover:scale-105 transition-transform duration-300 drop-shadow-sm">
+                    {value.toString().padStart(2, '0')}
+                  </span>
+                  <span className="text-[10px] sm:text-xs font-semibold tracking-[0.15em] text-gray-400 uppercase">
+                    {translatedLabel}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -145,7 +148,7 @@ function App() {
             className="w-full py-4 rounded-full font-sans font-semibold tracking-wide uppercase transition-all duration-300 flex items-center justify-center gap-3 bg-pink-300 text-white hover:bg-pink-400 shadow-lg shadow-pink-200 active:scale-[0.98] border border-pink-200"
           >
             <CalendarPlus className="w-5 h-5" />
-            <span>SAVE TO CALENDAR</span>
+            <span>SIMPAN KE KALENDER</span>
           </button>
         </div>
 
@@ -158,8 +161,8 @@ function App() {
                 <Calendar className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <p className="font-serif font-semibold text-lg text-gray-800">September 20, 2026</p>
-                <p className="text-sm font-medium text-gray-500">Save the Date</p>
+                <p className="font-serif font-semibold text-lg text-gray-800">20 September 2026</p>
+                <p className="text-sm font-medium text-gray-500">Simpan Tanggalnya</p>
               </div>
             </div>
 
@@ -170,8 +173,8 @@ function App() {
                 <Clock className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <p className="font-serif font-semibold text-lg text-gray-800">16:30 WITA - Drop</p>
-                <p className="text-sm font-medium text-gray-500">Main Event</p>
+                <p className="font-serif font-semibold text-lg text-gray-800">16:30 WITA - Selesai</p>
+                <p className="text-sm font-medium text-gray-500">Acara Utama</p>
               </div>
             </div>
 
@@ -182,8 +185,8 @@ function App() {
                 <MapPin className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <p className="font-serif font-semibold text-lg text-gray-800">Event Location</p>
-                <p className="text-sm font-medium text-gray-500">Location Revealed to VIPs</p>
+                <p className="font-serif font-semibold text-lg text-gray-800">Lokasi Acara</p>
+                <p className="text-sm font-medium text-gray-500">Detail Lokasi Terlampir</p>
               </div>
             </div>
 
@@ -212,7 +215,7 @@ function App() {
               className="mt-1 inline-flex w-full items-center justify-center gap-2 bg-white hover:bg-stone-50 border border-pink-200 transition-all duration-300 py-3.5 px-5 rounded-full text-sm font-semibold tracking-wide text-gray-700 group shadow-sm hover:shadow-md"
             >
               <Navigation className="w-4 h-4 text-pink-400 group-hover:-rotate-45 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform duration-300" />
-              OPEN IN GOOGLE MAPS
+              BUKA DI GOOGLE MAPS
             </a>
 
           </div>
