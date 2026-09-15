@@ -7,23 +7,27 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Space Grotesk"', 'sans-serif'],
-        syne: ['"Syne"', 'sans-serif'],
+        sans: ['"Outfit"', 'sans-serif'],
+        serif: ['"Playfair Display"', 'serif'],
       },
       animation: {
-        marquee: 'marquee 15s linear infinite',
-        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'float-1': 'float 8s ease-in-out infinite',
-        'float-2': 'float 12s ease-in-out infinite reverse',
+        'bloom': 'bloom 3s ease-out forwards',
+        'fade-in-up': 'fadeInUp 1s ease-out forwards',
+        'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
       },
       keyframes: {
-        marquee: {
-          '0%': { transform: 'translateX(0%)' },
-          '100%': { transform: 'translateX(-50%)' },
+        bloom: {
+          '0%': { transform: 'scale(0.9)', opacity: '0' },
+          '30%': { transform: 'scale(1.05)', opacity: '1' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
         },
-        float: {
-          '0%, 100%': { transform: 'translateY(0) scale(1)' },
-          '50%': { transform: 'translateY(-20px) scale(1.05)' },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        pulseSoft: {
+          '0%, 100%': { opacity: '0.6', transform: 'scale(1)' },
+          '50%': { opacity: '1', transform: 'scale(1.05)' },
         }
       }
     },
