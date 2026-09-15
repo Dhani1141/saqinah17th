@@ -72,8 +72,8 @@ function App() {
             <span className="text-[10px] font-bold tracking-[0.3em] text-cyan-300">GUEST PASS</span>
           </div>
 
-          <h1 className="text-5xl sm:text-6xl font-syne font-black tracking-tighter uppercase leading-[0.9] text-glow bg-gradient-to-br from-white via-fuchsia-200 to-fuchsia-500 bg-clip-text text-transparent">
-            Saqinah's<br/>Sweet 17
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-syne font-black tracking-tight uppercase leading-[1.1] text-glow bg-gradient-to-br from-white via-fuchsia-200 to-fuchsia-500 bg-clip-text text-transparent px-2">
+            SAQINAH'S<br/>SWEET 17
           </h1>
         </header>
 
