@@ -66,14 +66,27 @@ function App() {
       navigator.vibrate([100, 50, 100]);
     }
     
-    // Google Calendar URL format
-    const text = encodeURIComponent("Saqinah's Sweet 17");
-    const dates = "20260920T083000Z/20260920T130000Z"; // 16:30 WITA to 21:00 WITA in UTC
-    const details = encodeURIComponent("Don't be late! VIP Access Only.");
-    const location = encodeURIComponent("https://goo.gl/maps/FB5vcHYFkyEnHPQF8");
+    const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+DTSTART:20260920T083000Z
+DTEND:20260920T130000Z
+SUMMARY:Saqinah's Sweet 17
+DESCRIPTION:Don't be late! VIP Access Only.
+LOCATION:https://goo.gl/maps/FB5vcHYFkyEnHPQF8
+END:VEVENT
+END:VCALENDAR`;
+
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
     
-    const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${dates}&details=${details}&location=${location}`;
-    window.open(calUrl, '_blank');
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'saqinah-sweet-17.ics');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
